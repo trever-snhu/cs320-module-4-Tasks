@@ -11,17 +11,21 @@ class TaskTest {
   void testConstructor() {
     // Test valid input
     Task task = new Task("1234567890", "name", "description");
-    assertEquals("1234567890", task.getId());
-    assertEquals("name", task.getName());
-    assertEquals("description", task.getDescription());
+    assertAll("taskConstructor",
+        () -> assertEquals("1234567890", task.getId()),
+        () -> assertEquals("name", task.getName()),
+        () -> assertEquals("description", task.getDescription())
+    );
 
     // Test invalid input
-    assertThrows(IllegalArgumentException.class, () -> new Task(null, "name", "description"));
-    assertThrows(IllegalArgumentException.class, () -> new Task("12345678901", "name", "description"));
-    assertThrows(IllegalArgumentException.class, () -> new Task("1234567890", null, "description"));
-    assertThrows(IllegalArgumentException.class, () -> new Task("1234567890", "name12345678901234567890", "description"));
-    assertThrows(IllegalArgumentException.class, () -> new Task("1234567890", "name", null));
-    assertThrows(IllegalArgumentException.class, () -> new Task("1234567890", "name", "descriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescriptionde"));
+    assertAll("taskConstructor invalid input",
+        () -> assertThrows(IllegalArgumentException.class, () -> new Task(null, "name", "description")),
+        () -> assertThrows(IllegalArgumentException.class, () -> new Task("12345678901", "name", "description")),
+        () -> assertThrows(IllegalArgumentException.class, () -> new Task("1234567890", null, "description")),
+        () -> assertThrows(IllegalArgumentException.class, () -> new Task("1234567890", "name12345678901234567890", "description")),
+        () -> assertThrows(IllegalArgumentException.class, () -> new Task("1234567890", "name", null)),
+        () -> assertThrows(IllegalArgumentException.class, () -> new Task("1234567890", "name", "descriptiondescriptiondescriptiondescriptiondescriptiondescri"))
+    );
   }
 
   // Test setting name
@@ -33,8 +37,10 @@ class TaskTest {
     assertEquals("new name", task.getName());
 
     // Test invalid input
-    assertThrows(IllegalArgumentException.class, () -> task.setName(null));
-    assertThrows(IllegalArgumentException.class, () -> task.setName("name12345678901234567890"));
+    assertAll("taskSetName invalid input",
+        () -> assertThrows(IllegalArgumentException.class, () -> task.setName(null)),
+        () -> assertThrows(IllegalArgumentException.class, () -> task.setName("name12345678901234567890"))
+    );
   }
 
   // Test setting description
@@ -46,7 +52,9 @@ class TaskTest {
     assertEquals("new description", task.getDescription());
 
     // Test invalid input
-    assertThrows(IllegalArgumentException.class, () -> task.setDescription(null));
-    assertThrows(IllegalArgumentException.class, () -> task.setDescription("descriptiondescriptiondescriptiondescriptiondescriptiondescri"));
+    assertAll("taskSetDescription invalid input",
+        () -> assertThrows(IllegalArgumentException.class, () -> task.setDescription(null)),
+        () -> assertThrows(IllegalArgumentException.class, () -> task.setDescription("descriptiondescriptiondescriptiondescriptiondescriptiondescri"))
+    );
   }
 }

@@ -41,12 +41,13 @@ class TaskServiceTest {
   void testAddTask() {
     // Test valid input
     taskService.addTask(new Task("1234567891", "name", "description"));
-    assertEquals(2, taskService.getTasks().size());
 
     // Test invalid input
-    assertThrows(IllegalArgumentException.class, () -> taskService.addTask(null));
-    assertThrows(IllegalArgumentException.class, () -> taskService.addTask(new Task("1234567890", "name", "description")));
-
+    assertAll("taskService",
+        () -> assertEquals(2, taskService.getTasks().size()),
+        () -> assertThrows(IllegalArgumentException.class, () -> taskService.addTask(null)),
+        () -> assertThrows(IllegalArgumentException.class, () -> taskService.addTask(new Task("1234567890", "name", "description")))
+    );
   }
 
   @Test
@@ -55,10 +56,15 @@ class TaskServiceTest {
     taskService.removeTask("1234567890");
     assertEquals(0, taskService.getTasks().size());
 
-    // Test invalid input
-    assertThrows(IllegalArgumentException.class, () -> taskService.removeTask(null));
-    assertThrows(IllegalArgumentException.class, () -> taskService.removeTask("1234567890"));
+    // Add task back to list
+    taskService.addTask(new Task("1234567890", "name", "description"));
+    assertEquals(1, taskService.getTasks().size());
 
+    // Test invalid input
+    assertAll("removeTask with invalid input",
+        () -> assertThrows(IllegalArgumentException.class, () -> taskService.removeTask(null)),
+        () -> assertThrows(IllegalArgumentException.class, () -> taskService.removeTask("1234567891"))
+    );
   }
 
   @Test
@@ -68,11 +74,12 @@ class TaskServiceTest {
     assertEquals("new name", taskService.getTasks().get(0).getName());
 
     // Test invalid input
-    assertThrows(IllegalArgumentException.class, () -> taskService.updateTaskName(null, "new name"));
-    assertThrows(IllegalArgumentException.class, () -> taskService.updateTaskName("1234567890", null));
-    assertThrows(IllegalArgumentException.class, () -> taskService.updateTaskName("1234567890", "name12345678901234567890"));
-    assertThrows(IllegalArgumentException.class, () -> taskService.updateTaskName("badid", "new name"));
-
+    assertAll("updateTaskName with invalid input",
+        () -> assertThrows(IllegalArgumentException.class, () -> taskService.updateTaskName(null, "new name")),
+        () -> assertThrows(IllegalArgumentException.class, () -> taskService.updateTaskName("1234567890", null)),
+        () -> assertThrows(IllegalArgumentException.class, () -> taskService.updateTaskName("1234567890", "name12345678901234567890")),
+        () -> assertThrows(IllegalArgumentException.class, () -> taskService.updateTaskName("badid", "new name"))
+    );
   }
 
   @Test
@@ -82,11 +89,12 @@ class TaskServiceTest {
     assertEquals("new description", taskService.getTasks().get(0).getDescription());
 
     // Test invalid input
-    assertThrows(IllegalArgumentException.class, () -> taskService.updateTaskDescription(null, "new description"));
-    assertThrows(IllegalArgumentException.class, () -> taskService.updateTaskDescription("1234567890", null));
-    assertThrows(IllegalArgumentException.class, () -> taskService.updateTaskDescription("1234567890", "descriptiondescriptiondescriptiondescriptiondescriptiondescri"));
-    assertThrows(IllegalArgumentException.class, () -> taskService.updateTaskDescription("badid", "new description"));
-
+    assertAll("updateTaskDescription with invalid input",
+        () -> assertThrows(IllegalArgumentException.class, () -> taskService.updateTaskDescription(null, "new description")),
+        () -> assertThrows(IllegalArgumentException.class, () -> taskService.updateTaskDescription("1234567890", null)),
+        () -> assertThrows(IllegalArgumentException.class, () -> taskService.updateTaskDescription("1234567890", "descriptiondescriptiondescriptiondescriptiondescriptiondescri")),
+        () -> assertThrows(IllegalArgumentException.class, () -> taskService.updateTaskDescription("badid", "new description"))
+    );
   }
 
   @Test
@@ -102,7 +110,9 @@ class TaskServiceTest {
     assertEquals("name", taskService.getTask("1234567890").getName());
 
     // Test invalid input
-    assertThrows(IllegalArgumentException.class, () -> taskService.getTask(null));
-    assertThrows(IllegalArgumentException.class, () -> taskService.getTask("badid"));
+    assertAll("getTask with invalid input",
+        () -> assertThrows(IllegalArgumentException.class, () -> taskService.getTask(null)),
+        () -> assertThrows(IllegalArgumentException.class, () -> taskService.getTask("badid"))
+    );
   }
 }
